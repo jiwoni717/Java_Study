@@ -56,6 +56,8 @@ public class MusicSystem {
 			}
 		}
 		Music[] m = new Music[count];
+		// 검색어를 포함하고 있는 타이틀곡의 갯수를 세고 그 갯수만큼의 배열 생성
+		// 배열 생성만한거지 값을 넣은게 x
 		int i = 0;
 		for(Music mm:music)
 		{
