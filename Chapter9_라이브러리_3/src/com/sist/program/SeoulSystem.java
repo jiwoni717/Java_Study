@@ -157,9 +157,11 @@ public class SeoulSystem {
 					}
 					break;
 				}
+				
 				totalpage = seoulTotalPage();
 				System.out.println(curpage+" page / "+totalpage+" pages");
 				SeoulLocationVo[] data = seoulList(curpage);
+				
 				for(SeoulLocationVo vo:data)
 				{
 					if(vo!=null) //null이 아닌 값만 출력하게
