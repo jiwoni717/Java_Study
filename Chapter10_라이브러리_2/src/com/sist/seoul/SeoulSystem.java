@@ -21,13 +21,13 @@ public class SeoulSystem {
 			String[] seoul = sb.toString().split("\n"); // 한줄씩 나누기
 			for(String s:seoul)
 			{
-				StringTokenizer st = new StringTokenizer(s, "|"); // |로 나누기
+				StringTokenizer st = new StringTokenizer(s, "|"); //|로 나누기
 				SeoulVO vo = new SeoulVO();
-				vo.setNo(Integer.parseInt(st.nextToken()));
+				vo.setNo(Integer.parseInt(st.nextToken())); //형변환 필수
 				vo.setName(st.nextToken());
 				vo.setContent(st.nextToken());
 				vo.setLocation(st.nextToken());
-				list.add(vo);
+				list.add(vo); //리스트에 값 넣기
 			}
 		}catch(Exception ex){}
 	}

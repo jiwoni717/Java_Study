@@ -19,7 +19,7 @@ package com.sist.util;
  * 			└TreeSet
  * 		Map
  * 		 └HashMap*
- * 		 └Hashtable
+ * 		 └HashTable
  * 
  * 		List
  * 		1) 순서를 가지고 있다(인덱스 이용) => 0부터 시작
@@ -34,12 +34,12 @@ package com.sist.util;
  * 			Vector
  * 			LinkedList
  * 		6) 주요 메소드
- * 			데이터 추가 : add(Object)
+ * 			데이터 추가 : add(Object)*
  * 			데이터 삭제 : remove()
  * 			데이터 수정 : set()
- * 			데이터 읽기 : get()
- * 			저장된 데이터 갯수 가져오기 : size()
- * 			전체 삭제 : clear()
+ * 			데이터 읽기 : get()*
+ * 			저장된 데이터 갯수 가져오기 : size()*
+ * 			전체 삭제 : clear()*
  * 			데이터 존재 여부 확인 : isEmpty()
  * 		-----------------------------------------------
  * 		Set
