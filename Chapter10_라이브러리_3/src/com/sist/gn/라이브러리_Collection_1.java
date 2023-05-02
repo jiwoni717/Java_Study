@@ -30,11 +30,6 @@ public class 라이브러리_Collection_1 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		List list = new ArrayList();
-		list.add("사과");
-		list.add("배");
-		list.add("딸기");
-		
 		
 	}
 
