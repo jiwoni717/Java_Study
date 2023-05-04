@@ -51,6 +51,7 @@ public class DataCollectionManager {
 			vo.setPoster(poster.get(i).attr("src"));
 			String state="";
 			String id="";
+			System.out.println(vo.getPoster());
 			if(etc.get(i).text().contains("동일")) //etc로 묶어서 가져온 것 나누기
 			{
 				state="동일";

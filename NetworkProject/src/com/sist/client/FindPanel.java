@@ -42,7 +42,7 @@ public class FindPanel extends JPanel implements ActionListener{
 		};
 		
 		table = new JTable(model);
-		table.setRowHeight(35);
+		table.setRowHeight(50);
 		table.getTableHeader().setReorderingAllowed(false);
 		JScrollPane js = new JScrollPane(table);
 		
@@ -86,8 +86,8 @@ public class FindPanel extends JPanel implements ActionListener{
 				List<MelonMusicVO> list = ms.musicFindData(title);
 				for(MelonMusicVO vo:list)
 				{
-					URL url = new URL("http:"+vo.getPoster());
-					Image img = ImageChange.getImage(new ImageIcon(url), 30, 30);
+					URL url = new URL(vo.getPoster());
+					Image img = ImageChange.getImage(new ImageIcon(url), 45, 45);
 					Object[] data = {
 						new ImageIcon(img),
 						vo.getTitle(),
