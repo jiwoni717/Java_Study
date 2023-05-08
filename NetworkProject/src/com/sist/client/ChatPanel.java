@@ -12,7 +12,9 @@ import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+
 public class ChatPanel extends JPanel {
+	
 	JTextPane tpane; // 편집이 가능
 	JTextField tf;
 	JButton b1, b2;
@@ -21,6 +23,7 @@ public class ChatPanel extends JPanel {
 	DefaultTableModel model; // 데이터 관리
 	// 사이즈 850, 730
 	public ChatPanel() {
+		
 		// 초기화
 		tpane = new JTextPane();
 		tpane.setEditable(false);
@@ -61,9 +64,6 @@ public class ChatPanel extends JPanel {
 		add(box);
 		add(js2);
 		add(p);
-		
-		String[] data = {"hong", "홍길동", "남자"};
-		model.addRow(data);
 		
 		// 이벤트
 		

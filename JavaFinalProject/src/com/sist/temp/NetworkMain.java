@@ -3,12 +3,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
+import com.sist.common.Function;
 import com.sist.common.ImageChange;
 import com.sist.manager.GenieMusicVO;
 import com.sist.manager.MusicSystem;
+// ↓ 네트워크 관련
 import java.util.*;
 import java.util.List;
-public class NetworkMain extends JFrame implements ActionListener{
+import java.io.*;
+import java.net.*;
+/*
+ 		프로그램 => 2개
+ 		1) 로그인, 채팅문자열 입력... => 일반 사용자
+ 		2) 서버에서 전송되는 데이터 출력 => 스레드
+ */
+public class NetworkMain extends JFrame implements ActionListener,Runnable{
 	
 	MenuPanel mp;
 	ControlPanel cp;
@@ -21,6 +31,14 @@ public class NetworkMain extends JFrame implements ActionListener{
 	int curpage = 1;
 	int totalpage = 0;
 	MusicSystem ms = new MusicSystem();
+	
+	//네트워크와 관련된 클래스
+	//1.서버연결
+	Socket s; // 서버의 메모리 연결
+	//2.서버에서 보내준 값을 받음
+	BufferedReader in;
+	//3.서버로 값을 보냄
+	OutputStream out;
 	
 	public NetworkMain()
 	{
@@ -122,8 +140,45 @@ public class NetworkMain extends JFrame implements ActionListener{
 		}
 		else if(e.getSource()==login.b1)
 		{
-			login.setVisible(false);
-			setVisible(true);
+			// 로그인 데이터 읽기
+			String id = login.tf1.getText();
+			if(id.length()<1)
+			{
+				JOptionPane.showMessageDialog(this, "ID를 입력하세요");
+				login.tf1.requestFocus();
+				return;
+			}
+			String name = login.tf2.getText();
+			if(id.length()<1)
+			{
+				JOptionPane.showMessageDialog(this, "이름을 입력하세요");
+				login.tf2.requestFocus();
+				return;
+			}
+			String sex = "남자";
+			if(login.rb1.isSelected())
+			{
+				sex = "남자";
+			}
+			else
+			{
+				sex = "여자";
+			}
+			
+			// 입력값(아이디, 이름, 성별)을 서버로 전송
+			try {
+				// 서버 연결, localhost는 나중에 서버 컴퓨터 IP로 변경할 것
+				s = new Socket("localhost", 11111);
+				
+				//읽는 위치, 쓰는 위치
+				in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				out = s.getOutputStream();
+				
+				//서버로 로그인 요청
+				out.write((Function.LOGIN+"|"+id+"|"+name+"|"+sex+"\n").getBytes());
+			}catch (Exception ex) {}
+			//서버로 전송된 값을 받아온다
+			new Thread(this).start(); // run() 호출
 		}
 		else if(e.getSource()==login.b2)
 		{
@@ -131,11 +186,15 @@ public class NetworkMain extends JFrame implements ActionListener{
 		}
 		else if(e.getSource()==cp.cp.tf)
 		{
-			cp.cp.initStyle();
 			String msg = cp.cp.tf.getText();
 			String color = cp.cp.box.getSelectedItem().toString();
 			if(msg.length()<1) return;
-			cp.cp.append(msg, color);
+			
+			// 서버로 전송
+			try {
+				out.write((Function.CHAT+"|"+msg+"|"+color+"\n").getBytes());
+			}catch(Exception ex) {}
+			
 			cp.cp.tf.setText("");
 		}
 		else if(e.getSource()==cp.hp.b1)
@@ -154,6 +213,45 @@ public class NetworkMain extends JFrame implements ActionListener{
 				musicDisplay();
 			}
 		}
+	}
+
+	@Override
+	public void run() {
+		//서버에서 결과값을 받아서 출력 => 스레드(자동화)
+		try {
+			while(true)
+			{
+				String msg = in.readLine();
+				StringTokenizer st = new StringTokenizer(msg, "|");
+				int protocol = Integer.parseInt(st.nextToken());
+				switch(protocol)
+				{
+					case Function.LOGIN :
+					{
+						// 로그인하면 정보 테이블에 추가 => 출력
+						String[] data = {st.nextToken(), st.nextToken(), st.nextToken()};
+						cp.cp.model.addRow(data);
+					}
+					break;
+					// 모든 명령을 서버로부터 받아서 처리해야함
+					case Function.MYLOG :
+					{
+						setTitle(st.nextToken());
+						login.setVisible(false);
+						setVisible(true);
+					}
+					break;
+					
+					case Function.CHAT :
+					{
+						cp.cp.initStyle();
+						cp.cp.append(st.nextToken(), st.nextToken());
+						//			   채팅 문자열			글씨 색상
+					}
+					break;
+				}
+			}
+		}catch(Exception ex) {}
 	}
 	
 }
