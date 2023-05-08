@@ -32,7 +32,12 @@
 		 	=> ss.accept() : 클라이언트가 서버 연결 호출(연결시마다 호출)
 		 	=> 클라이언트 정보 (ip, port => Socket)
 		 3) 클라이언트마다 따로 통신이 가능하게 넘겨준다
-		 
+		 	스레드가 작동하는 과정
+		 	생성
+		 	 new Thread() =====> 대기 상태 =====> Running =====> 대기
+		 	 			  start()		 run()	  │	   sleep()
+		 	 									 Dead => interrupt()
+		 	
  */
 package com.sist.server;
 
