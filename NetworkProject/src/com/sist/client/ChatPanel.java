@@ -35,18 +35,19 @@ public class ChatPanel extends JPanel {
 		box.addItem("orange");
 		box.addItem("cyan");
 		
-		// 테이블
-		String[] col = {"아이디","이름","성별"};
-		String[][] row = new String[0][3];
-		model = new DefaultTableModel(row,col);
-		table = new JTable(model);
-		JScrollPane js2 = new JScrollPane(table);
 		b1 = new JButton("쪽지 보내기");
 		b2 = new JButton("정보보기");
 		JPanel p = new JPanel();
 		p.add(b1);
 		p.add(b2);
 		
+		// 테이블
+		String[] col = {"아이디","이름","성별"};
+		String[][] row = new String[0][3];
+		model = new DefaultTableModel(row,col);
+		table = new JTable(model);
+		JScrollPane js2 = new JScrollPane(table);
+
 		// 배치
 		setLayout(null);
 		js1.setBounds(10, 15, 600, 600);
@@ -90,6 +91,7 @@ public class ChatPanel extends JPanel {
 		Style orange = tpane.addStyle("orange", null);
 		StyleConstants.setForeground(orange, Color.orange);
 	}
+	
 	public void append(String msg, String color)
 	{
 		try {
