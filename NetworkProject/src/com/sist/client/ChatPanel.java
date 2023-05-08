@@ -1,6 +1,5 @@
 package com.sist.client;
 import java.awt.Color;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -20,7 +19,7 @@ public class ChatPanel extends JPanel {
 	JTable table;
 	JComboBox<String> box;
 	DefaultTableModel model; // 데이터 관리
-	// 850, 730
+	// 사이즈 850, 730
 	public ChatPanel() {
 		// 초기화
 		tpane = new JTextPane();
