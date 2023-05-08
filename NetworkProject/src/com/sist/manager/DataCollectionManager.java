@@ -17,19 +17,11 @@ public class DataCollectionManager {
 	public static void main(String[] args) {
 		
 		List<MelonMusicVO> list=new ArrayList<MelonMusicVO>();
-		FileOutputStream fi=null;
-		 ObjectOutputStream obi=null;
+		FileOutputStream fo=null;
+		 ObjectOutputStream oos=null;
 		try {
-			fi=new FileOutputStream("C:\\java_datas\\Melon_MusicData.txt");
-			obi=new ObjectOutputStream(fi);
-//			private int no;
-//			private String title;
-//			private String singer;
-//			private String album;
-//			private String poster;
-//			private int idcrement; 
-//			private String state; 
-//		    private int hit;
+			fo=new FileOutputStream("C:\\java_datas\\Melon_MusicData.txt");
+			oos=new ObjectOutputStream(fo);
 			
 			Document doc=Jsoup.connect("https://www.melon.com/chart/index.htm").get();
 			Elements title= doc.select("div.wrap div.wrap_song_info div.rank01");
@@ -37,8 +29,6 @@ public class DataCollectionManager {
 			Elements album= doc.select("div.wrap div.wrap_song_info div.rank03");
 			Elements poster= doc.select("div.wrap img");
 			Elements etc= doc.select("div.wrap span.rank_wrap"); //etc로 한번에 묶어서 가져온다
-	
-			
 					
 		for(int i=0; i<title.size();i++)
 		{
@@ -51,7 +41,7 @@ public class DataCollectionManager {
 			vo.setPoster(poster.get(i).attr("src"));
 			String state="";
 			String id="";
-			System.out.println(vo.getPoster());
+			
 			if(etc.get(i).text().contains("동일")) //etc로 묶어서 가져온 것 나누기
 			{
 				state="동일";
@@ -70,9 +60,8 @@ public class DataCollectionManager {
 			vo.setIdcrement(Integer.parseInt(id));
 			list.add(vo);
 			
-		//System.out.println(etc.get(i).text());
 		}
-		obi.writeObject(list);
+		oos.writeObject(list);
 		System.out.println("저장 완료");
 			
 			
@@ -84,15 +73,12 @@ public class DataCollectionManager {
 		{
 			try
 			{
-				fi.close();
-				obi.close();
-			}catch (Exception e) 
-			{
-				
-			}
-			}
+				fo.close();
+				oos.close();
+			} catch (Exception e) {}
 		}
-
 	}
+
+}
 
 

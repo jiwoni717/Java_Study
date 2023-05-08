@@ -6,7 +6,7 @@ public class ControlPanel extends JPanel {
 	ChartPanel cp = new ChartPanel();
 	FindPanel fp = new FindPanel();
 	ChatPanel chatp = new ChatPanel();
-	MagPanel magp = new MagPanel();
+	MagPanel magp = new MagPanel(); //매거진
 	
 	CardLayout card = new CardLayout();
 	
