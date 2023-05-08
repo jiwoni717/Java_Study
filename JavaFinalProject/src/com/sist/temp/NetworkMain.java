@@ -69,7 +69,13 @@ public class NetworkMain extends JFrame implements ActionListener{
 		login.b2.addActionListener(this);
 		
 		//메인페이지
-		musicDisplay();
+		List<GenieMusicVO> list = ms.musicListData(curpage);
+		cp.hp.cardInit(list);
+		cp.hp.cardPrint(list);
+		totalpage = ms.musicTotalPage();
+		cp.hp.b1.addActionListener(this);
+		cp.hp.b2.addActionListener(this);
+		cp.hp.pageLa.setText(curpage+" page / "+totalpage+" pages");
 	}
 
 	public static void main(String[] args) {
@@ -85,8 +91,6 @@ public class NetworkMain extends JFrame implements ActionListener{
 		cp.hp.cardInit(list);
 		cp.hp.cardPrint(list);
 		totalpage = ms.musicTotalPage();
-		cp.hp.b1.addActionListener(this);
-		cp.hp.b2.addActionListener(this);
 		cp.hp.pageLa.setText(curpage+" page / "+totalpage+" pages");
 	}
 	
