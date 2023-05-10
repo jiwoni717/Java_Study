@@ -37,6 +37,14 @@
 		 	 new Thread() =====> 대기 상태 =====> Running =====> 대기
 		 	 			  start()		 run()	  │	   sleep()
 		 	 									 Dead => interrupt()
+		 	 									 
+		4. 서버의 역할
+		 1) 저장(클라이언트 정보)
+		 	waitVc(Vector)
+		 2) 검색
+		 3) 수정
+		 4) 클라이언트로 전송
+		 5) 요청 처리 기능
  */
 package com.sist.server;
 import java.util.*;
@@ -136,8 +144,6 @@ public class Server implements Runnable {
 				//요청값 받음
 				String msg = in.readLine();
 				
-				System.out.println("Client 전송값 : "+msg);
-				
 				StringTokenizer st = new StringTokenizer(msg, "|");
 				int protocol = Integer.parseInt(st.nextToken());
 				switch(protocol)
@@ -155,7 +161,7 @@ public class Server implements Runnable {
 						waitVc.add(this);
 						
 						// 로그인은 종료 => main창을 보여준다
-						messageTo(Function.MYLOG+"|"+name);
+						messageTo(Function.MYLOG+"|"+name+"|"+id);
 						
 						// 로그인 하는 사람에게 모든 정보 전송
 						for(Client user:waitVc)
@@ -170,6 +176,58 @@ public class Server implements Runnable {
 						String strMsg = st.nextToken();
 						String color = st.nextToken();
 						messageAll(Function.CHAT+"|["+name+"]"+strMsg+"|"+color);
+					}
+					break;
+					
+					case Function.INFO:
+					{
+						// 상대방 ID 받기
+						String youId = st.nextToken();
+						for(Client user:waitVc)
+						{
+							if(youId.equals(user.id))
+							{
+								messageTo(Function.INFO+"|"+user.id+"|"+user.name+"|"+user.sex);
+								break;
+							}
+						}
+					}
+					break;
+					
+					case Function.MSGSEND:
+					{
+						String youId = st.nextToken();
+						String strMsg = st.nextToken();
+						for(Client user:waitVc)
+						{
+							if(youId.equals(user.id))
+							{
+								user.messageTo(Function.MSGSEND+"|"+id+"|"+strMsg);
+								break;
+							}
+						}
+					}
+					break;
+					
+					case Function.EXIT:
+					{
+						String mid = st.nextToken();
+						int i=0;
+						for(Client user:waitVc)
+						{
+							if(user.id.equals(mid))
+							{
+								user.messageTo(Function.MYEXIT+"|");
+								waitVc.remove(i);
+								in.close();
+								out.close();
+								// 서버 종료
+								break;
+							}
+							i++;
+						}
+						// 전체 메세지
+						messageAll(Function.EXIT+"|"+mid);
 					}
 					break;
 				}

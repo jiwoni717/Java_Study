@@ -13,7 +13,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-public class ChatPanel extends JPanel {
+import com.sist.inter.ChatInterface;
+public class ChatPanel extends JPanel implements ChatInterface {
 	
 	JTextPane tpane; // 편집이 가능
 	JTextField tf;
@@ -21,6 +22,7 @@ public class ChatPanel extends JPanel {
 	JTable table;
 	JComboBox<String> box;
 	DefaultTableModel model; // 데이터 관리
+	
 	// 사이즈 850, 730
 	public ChatPanel() {
 		
@@ -47,7 +49,14 @@ public class ChatPanel extends JPanel {
 		// 테이블
 		String[] col = {"아이디","이름","성별"};
 		String[][] row = new String[0][3];
-		model = new DefaultTableModel(row,col);
+		model = new DefaultTableModel(row,col)
+		{
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		
 		table = new JTable(model);
 		JScrollPane js2 = new JScrollPane(table);
 
@@ -65,9 +74,12 @@ public class ChatPanel extends JPanel {
 		add(js2);
 		add(p);
 		
-		// 이벤트
+		// 버튼 비활성화
+		b1.setEnabled(false);
+		b2.setEnabled(false);
 		
 	}
+	
 	public void initStyle()
 	{
 		Style black = tpane.addStyle("black", null);

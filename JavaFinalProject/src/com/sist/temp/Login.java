@@ -49,7 +49,6 @@ public class Login extends JFrame {
 		add(la3); add(rb1); add(rb2);
 		add(p);
 		
-		
 		setSize(270, 200);
 		setVisible(true);
 	}

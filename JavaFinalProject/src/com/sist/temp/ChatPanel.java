@@ -11,7 +11,9 @@ import javax.swing.table.*;
 import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
-public class ChatPanel extends JPanel {
+
+import com.sist.inter.ChatInterface;
+public class ChatPanel extends JPanel implements ChatInterface {
 	
 	JTextPane pane; // 편집이 가능
 	JTextField tf;
@@ -45,7 +47,15 @@ public class ChatPanel extends JPanel {
 		// 테이블
 		String[] col = {"아이디","이름","성별"};
 		String[][] row = new String[0][3];
-		model = new DefaultTableModel(row,col);
+		model = new DefaultTableModel(row,col)
+		{
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
+		
 		table = new JTable(model);
 		JScrollPane js2 = new JScrollPane(table);
 		
@@ -62,6 +72,10 @@ public class ChatPanel extends JPanel {
 		add(box);
 		add(js2);
 		add(p);
+		
+		// 버튼 비활성화
+		b1.setEnabled(false);
+		b2.setEnabled(false);
 		
 	}
 	

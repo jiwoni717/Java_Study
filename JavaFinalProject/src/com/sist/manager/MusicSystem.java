@@ -52,6 +52,20 @@ public class MusicSystem {
 		return mList;
 	}
 	
+	public GenieMusicVO musicDetailData(String title)
+	{
+		GenieMusicVO vo = new GenieMusicVO();
+		for(GenieMusicVO gvo : list)
+		{
+			if(gvo.getTitle().equals(title))
+			{
+				vo = gvo;
+				break;
+			}
+		}
+		return vo;
+	}
+	
 	// 뮤직 데이터 20개씩 나눠서 전송
 	public List<GenieMusicVO> musicListData(int page)
 	{

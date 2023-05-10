@@ -1,18 +1,37 @@
 package com.sist.temp;
+
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.net.URI;
+import java.net.URL;
+import java.rmi.server.UID;
 import java.util.*;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import com.sist.common.ImageChange;
+import com.sist.inter.HomeInterface;
 import com.sist.manager.GenieMusicVO;
-public class HomePanel extends JPanel {
+import com.sist.manager.MusicSystem;
+
+public class HomePanel extends JPanel implements HomeInterface, MouseListener {
+	
 	PosterCard[] pcs = new PosterCard[20];
 	JPanel pan = new JPanel();
 	JButton b1, b2;
 	JLabel pageLa;
+	ControlPanel cp;
+	MusicSystem ms = new MusicSystem();
 	
-	public HomePanel(){
+	public HomePanel(ControlPanel cp){
+		this.cp = cp;
+		
 		b1 = new JButton("이전");
 		b2 = new JButton("다음");
 		pageLa = new JLabel("0 page / 0 pages");
@@ -38,11 +57,65 @@ public class HomePanel extends JPanel {
 			i++;
 		}
 		
+		for(int j=0;j<pcs.length;j++)
+		{
+			pcs[j].addMouseListener(this);
+		}
+		
 	}
 	
 	public void cardInit(List<GenieMusicVO> list)
 	{
 		pan.removeAll(); // 데이터 제거
 		pan.validate(); // 패널 재배치
+	}
+
+	// 자동 호출 => 콜백(시스템에 의해 호출되는 메소드)
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		for(int i=0;i<pcs.length;i++)
+		{
+			if(e.getSource()==pcs[i])
+			{
+				String title = pcs[i].tLa.getText();
+				GenieMusicVO vo = ms.musicDetailData(title);
+				try {
+					URL url = new URL("http:"+vo.getPoster());
+					Image img = ImageChange.getImage(new ImageIcon(url), 300, 300);
+					cp.dp.imgLa.setIcon(new ImageIcon(img));
+					cp.dp.titleLa.setText(vo.getTitle());
+					cp.dp.singerLa.setText(vo.getSinger());
+					cp.dp.albumLa.setText(vo.getAlbum());
+					cp.dp.stateLa.setText(vo.getState());
+					cp.dp.crementLa.setText(vo.getIdcreament()==0?"":String.valueOf(vo.getIdcreament()));
+					cp.dp.keyLa.setText(vo.getKey());
+					cp.card.show(cp, "detail");
+				}catch(Exception ex) {}
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

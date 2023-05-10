@@ -96,8 +96,6 @@ public class Server implements Runnable {
 				//요청값 받음
 				String msg = in.readLine();
 				
-				System.out.println("Client 전송값 : "+msg);
-				
 				StringTokenizer st = new StringTokenizer(msg, "|");
 				int protocol = Integer.parseInt(st.nextToken());
 				switch(protocol)
@@ -115,7 +113,7 @@ public class Server implements Runnable {
 						waitVc.add(this);
 						
 						// 로그인은 종료 => main창을 보여준다
-						messageTo(Function.MYLOG+"|"+name);
+						messageTo(Function.MYLOG+"|"+name+"|"+id);
 						
 						// 로그인 하는 사람에게 모든 정보 전송
 						for(Client user:waitVc)
@@ -130,6 +128,59 @@ public class Server implements Runnable {
 						String strMsg = st.nextToken();
 						String color = st.nextToken();
 						messageAll(Function.CHAT+"|["+name+"]"+strMsg+"|"+color);
+					}
+					break;
+					
+					case Function.INFO:
+					{
+						//상대방의 ID 받기
+						String youId = st.nextToken();
+						for(Client user:waitVc)
+						{
+							if(youId.equals(user.id))
+							{
+								// 내가 선택한 사람과 같은 아이디를 유저정보에서 찾으면 그 유저 정보를 넘겨줌!!
+								messageTo(Function.INFO+"|"+user.id+"|"+user.name+"|"+user.sex);
+								break;
+							}
+						}
+					}
+					break;
+					
+					case Function.MSGSEND:
+					{
+						String youId = st.nextToken();
+						String strMsg = st.nextToken();
+						for(Client user:waitVc)
+						{
+							if(youId.equals(user.id))
+							{
+								// 내가 쪽지를 보낸 사람의 아이디와 같으면 정보값(아이디, 내가 적은 메세지)을 넘겨준다
+								user.messageTo(Function.MSGSEND+"|"+id+"|"+strMsg);
+								break;
+							}
+								
+						}
+					}
+					break;
+					
+					case Function.EXIT:
+					{
+						String mid = st.nextToken();
+						int i=0;
+						for(Client user:waitVc)
+						{
+							if(user.id.equals(mid))
+							{
+								user.messageTo(Function.MYEXIT+"|");
+								waitVc.remove(i);
+								in.close();
+								out.close();
+								break;
+							}
+							i++;
+						}
+						messageAll(Function.EXIT+"|"+mid);
 					}
 					break;
 				}

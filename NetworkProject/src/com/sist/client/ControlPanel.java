@@ -6,7 +6,7 @@ public class ControlPanel extends JPanel {
 	ChartPanel cp = new ChartPanel();
 	FindPanel fp = new FindPanel();
 	ChatPanel chatp = new ChatPanel();
-	MagPanel magp = new MagPanel(); //매거진
+	MagPanel mp = new MagPanel();
 	
 	CardLayout card = new CardLayout();
 	
@@ -17,6 +17,6 @@ public class ControlPanel extends JPanel {
 		add("chart",cp);
 		add("find",fp);
 		add("chat",chatp);
-		add("magazine",magp);
+		add("magazine", mp);
 	}
 }

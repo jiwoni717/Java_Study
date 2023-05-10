@@ -4,11 +4,12 @@ import java.net.URL;
 import javax.swing.*;
 import javax.swing.table.*;
 import com.sist.common.ImageChange;
+import com.sist.inter.FindInterface;
 import com.sist.manager.*;
 import java.util.*;
 import java.util.List;
 import java.awt.event.*;
-public class FindPanel extends JPanel implements ActionListener {
+public class FindPanel extends JPanel implements ActionListener, FindInterface {
 	
 	JTextField tf;
 	JButton b1;
