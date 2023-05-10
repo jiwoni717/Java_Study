@@ -7,6 +7,7 @@ public class ControlPanel extends JPanel{
 	NewsPanel np = new NewsPanel();
 	ChatPanel cp = new ChatPanel();
 	FindPanel fp = new FindPanel();
+	
 	HomePanel hp;
 	DetailPanel dp;
 	BoardListPanel bp;
