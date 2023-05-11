@@ -189,5 +189,21 @@ public class BoardListPanel extends JPanel implements ActionListener, MouseListe
 			cp.ip.pf.setText("");
 			cp.card.show(cp, "insert");
 		}
+		else if(e.getSource()==b2)
+		{
+			if(curpage>1)
+			{
+				curpage--;
+				boardPrint();
+			}
+		}
+		else if(e.getSource()==b3)
+		{
+			if(curpage<totalpage)
+			{
+				curpage++;
+				boardPrint();
+			}
+		}
 	}
 }
