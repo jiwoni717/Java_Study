@@ -1,34 +1,37 @@
 package com.sist.client;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+
 public class ControlPanel extends JPanel {
-	HomePanel hp; 
+	HomePanel hp;
 	ChartPanel cp;
 	DetailPanel dp;
-	FindPanel fp = new FindPanel(); //화면 전환 불가능
-	ChatPanel chatp = new ChatPanel();
-	BoardListPanel bp;
+	BoardListPenal bp;
 	BoardInsertPanel ip;
-	BoardDetailPanel bdp;
+	BoardDetailPenal bdp;
+	FindPanel fp = new FindPanel();
+	ChatPanel chatp = new ChatPanel();
+	MagPanel magp = new MagPanel(); //매거진
+	
 	CardLayout card = new CardLayout();
 	
 	public ControlPanel()
 	{
-		bp=new BoardListPanel(this);//화면 전환 가능
-		ip=new BoardInsertPanel(this);
-    	bdp=new BoardDetailPanel(this);
 		cp = new ChartPanel(this);
 		dp = new DetailPanel(this);
 		hp = new HomePanel(this);
+		bp = new BoardListPenal(this);
+		ip = new BoardInsertPanel(this);
+		bdp= new BoardDetailPenal(this);
 		setLayout(card);
 		add("home",hp);
 		add("detail",dp);
-		add("board",bp);
-    	add("insert",ip);
 		add("chart",cp);
 		add("find",fp);
 		add("chat",chatp);
-		add("bdp",bdp);
-		
+		add("magazine",magp);
+		add("board", bp);
+		add("insert", ip);
+		add("bdp", bdp);
 	}
 }

@@ -5,19 +5,26 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URL;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import javax.swing.*;
+
 import com.sist.common.Function;
+import com.sist.common.ImageChange;
+import com.sist.manager.MelonMusicHomeVO;
 import com.sist.manager.MelonMusicVO;
 import com.sist.manager.MusicSystem;
-public class Layout extends JFrame implements ActionListener, Runnable, MouseListener {
+
+public class Layout extends JFrame implements ActionListener, Runnable, MouseListener{
 	MenuPanel mp;
 	MainPanel mp2;
 	RecomPanel rp;
-	JButton b1,b2,b3,b4,b5,b6;
+	JButton b1,b2,b3,b4,b5,b6,b7;
 	ControlPanel controlp;
 	Login login = new Login();
+	JLabel logo;
 	
 	//페이지 지정
 	int curpage = 1;
@@ -40,17 +47,27 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 	RecvMessage rm = new RecvMessage();
 	
 	public Layout() {
-		
 		setTitle("2조 미니 프로젝트");
 		
 		mp = new MenuPanel();
 		mp2 = new MainPanel();
 		rp = new RecomPanel();
 		controlp = new ControlPanel();
+		logo=new JLabel();
+		try 
+		{
+			URL url=new URL("https://www.brandbrief.co.kr/news/photo/202209/5519_11599_576.jpg"); 
+			Image img=ImageChange.getImage(new ImageIcon(url),90,90);
+			logo.setIcon(new ImageIcon(img));
+		}catch (Exception e) 
+		{
+			
+		}
 		
 		setLayout(null); // 사용자 정의 레이아웃
-		
-		mp.setBounds(10, 15, 90, 200);
+		logo.setBounds(10, 15, 90, 90);
+		add(logo);
+		mp.setBounds(10, 115, 90, 250);
 		controlp.setBounds(110, 15, 850, 730);
 		rp.setBounds(970, 15, 200, 730);
 		
@@ -59,11 +76,12 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		b3 = new JButton("음악 검색");
 		b4 = new JButton("채팅");
 		b5 = new JButton("매거진");
+		b7 = new JButton("커뮤니티");
 		b6 = new JButton("나가기");
 		
 		//메뉴 패널에 버튼 추가
-		mp.setLayout(new GridLayout(6,1,10,10));
-		mp.add(b1); mp.add(b2); mp.add(b3); mp.add(b4); mp.add(b5); mp.add(b6);
+		mp.setLayout(new GridLayout(7,1,10,10));
+		mp.add(b1); mp.add(b2); mp.add(b3); mp.add(b4); mp.add(b5);mp.add(b7); mp.add(b6);
 		
 		add(mp);
 		add(controlp);
@@ -79,6 +97,7 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		b4.addActionListener(this);
 		b5.addActionListener(this);
 		b6.addActionListener(this);
+		b7.addActionListener(this);
 		
 		//로그인 처리
 		login.b1.addActionListener(this);
@@ -87,9 +106,10 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		// 채팅
 		controlp.chatp.tf.addActionListener(this);
 		
-		//!!!!!!메인페이지 (뮤직 리스트 데이터 만들어야됨)!!!!!!
+		albumDisplay();
+		controlp.hp.b1.addActionListener(this);//이전
+		controlp.hp.b2.addActionListener(this);//다음
 		
-
 		//테이블 선택 인덱스 번호 + 쪽지 보내기 + 정보 보기
 		controlp.chatp.b1.addActionListener(this);
 		controlp.chatp.b2.addActionListener(this);
@@ -100,14 +120,30 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		sm.b2.addActionListener(this);
 		rm.b1.addActionListener(this);
 		rm.b2.addActionListener(this);
-		
 	}
 	
 	public static void main(String[] args) {
+		
 		try {
 			UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
 		}catch(Exception ex) {}
 		new Layout();
+	}
+	
+	public void albumDisplay() {
+		totalpage = ms.albumTotlaPage();
+		
+		List<MelonMusicHomeVO> list = ms.albumListData(curpage);
+		
+		controlp.hp.cardInit(list);
+		controlp.hp.cardPrint(list);
+		controlp.hp.pageLa.setText(curpage + " page / " + totalpage + " pages");
+	}
+	
+	public void chartDisplay() {
+		List<MelonMusicVO> list = ms.musicListData();
+		controlp.cp.cardInit(list);
+		controlp.cp.cardPrint(list);
 	}
 	
 	//버튼 클릭했을 때
@@ -116,10 +152,13 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		
 		if(e.getSource()==b1)
 		{
+			curpage=1;
+			albumDisplay();
 			controlp.card.show(controlp, "home");
 		}
 		else if(e.getSource()==b2)
 		{
+			chartDisplay();
 			controlp.card.show(controlp, "chart");
 		}
 		else if(e.getSource()==b3)
@@ -133,6 +172,8 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		else if(e.getSource()==b5)
 		{
 			controlp.card.show(controlp, "magazine");
+		} else if(e.getSource() == b7) {
+			controlp.card.show(controlp, "board");
 		}
 		else if(e.getSource()==login.b1)
 		{
@@ -162,9 +203,10 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 			
 			try {
 				//localhost 서버 컴퓨터 IP로 변경할것!!!
-				s = new Socket("localhost", 11111);
+				s = new Socket("211.238.142.111", 11111);
 				in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				out = s.getOutputStream();
+				
 				out.write((Function.LOGIN+"|"+id+"|"+name+"|"+sex+"\n").getBytes());
 			}catch(Exception ex) {}
 			new Thread(this).start();
@@ -182,27 +224,23 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 			
 			try {
 				out.write((Function.CHAT+"|"+msg+"|"+color+"\n").getBytes());
-			} catch (Exception ex) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			
 			controlp.chatp.tf.setText("");
 		}
-		else if(e.getSource()==controlp.chatp.b1)
-		{	//쪽지 보내기 버튼
-			sm.ta.setText("");
-			String youId = controlp.chatp.table.getValueAt(selectRow, 0).toString();
-			sm.tf.setText(youId);
-			sm.setVisible(true);
+		else if(e.getSource() == controlp.hp.b1) {
+			if(curpage > 1) {
+				curpage--;
+				albumDisplay();
+			}
 		}
-		else if(e.getSource()==controlp.chatp.b2)
-		{	//정보 보기 버튼
-			
-			//대상이 선택된 경우
-			String youId = controlp.chatp.table.getValueAt(selectRow, 0).toString();
-			try {
-				out.write((Function.INFO+"|"+youId+"\n").getBytes());
-			}catch(Exception ex) {}
+		else if(e.getSource() == controlp.hp.b2) {
+			if(curpage < totalpage) {
+				curpage++;
+				albumDisplay();
+			}
 		}
 		else if(e.getSource()==sm.b1)
 		{
@@ -233,14 +271,27 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 		{
 			rm.setVisible(false);
 		}
-		else if(e.getSource()==b6)
-		{
-			try {
-				out.write((Function.EXIT+"|"+myId+"\n").getBytes());
-			}catch(Exception ex) {}
+		else if(e.getSource()==controlp.chatp.b1)
+		{	//쪽지 보내기 버튼
+			sm.ta.setText("");
+			String youId = controlp.chatp.table.getValueAt(selectRow, 0).toString();
+			sm.tf.setText(youId);
+			sm.setVisible(true);
 		}
-		
-		
+		else if(e.getSource()==controlp.chatp.b2)
+		{	//정보 보기 버튼
+			
+			//대상이 선택된 경우
+			String youId = controlp.chatp.table.getValueAt(selectRow, 0).toString();
+			try {
+				out.write((Function.INFO+"|"+youId+"\n").getBytes());
+			}catch(Exception ex) {}
+		} else if(e.getSource()==b6) {
+			try
+			{
+				out.write((Function.EXIT+"|"+myId+"\n").getBytes());
+			}catch(Exception ex){}
+		}
 	}
 
 	@Override
@@ -264,7 +315,7 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 					// 모든 명령을 서버로부터 받아서 처리해야함
 					case Function.MYLOG :
 					{
-						setTitle("2조 미니 프로젝트 ("+st.nextToken()+")");
+						setTitle(st.nextToken());
 						myId = st.nextToken();
 						login.setVisible(false);
 						setVisible(true);
@@ -275,10 +326,9 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 					{
 						controlp.chatp.initStyle();
 						controlp.chatp.append(st.nextToken(), st.nextToken());
-						//			 		   채팅 문자열			글씨 색상
+						//			   채팅 문자열			글씨 색상
 					}
 					break;
-					
 					case Function.INFO:
 					{
 						String data = "아이디 : "+st.nextToken()+"\n"+"이름 : "+st.nextToken()+"\n"+"성별 : "+st.nextToken()+"\n";
@@ -295,38 +345,37 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 						rm.setVisible(true);
 					}
 					break;
-					
 					case Function.MYEXIT:
-					{
-						dispose();
-						System.exit(0);
-					}
-					break;
-					
-					case Function.EXIT:
-					{
-						String mid = st.nextToken();
-						for(int i=0;i<controlp.chatp.model.getRowCount();i++)
-						{
-							String uid = controlp.chatp.table.getValueAt(i, 0).toString();
-							if(mid.equals(uid))
-							{
-								controlp.chatp.model.removeRow(i);
-								break;
-							}
-						}
-								
-					}
-					break;
+					  {
+						  dispose();// 윈도우 메모리 해제 
+						  System.exit(0);// 프로그램 종료
+					  }
+					  break;
+					  case Function.EXIT:
+					  {
+						  String mid=st.nextToken();
+						  for(int i=0;i<controlp.chatp.model.getRowCount();i++)
+						  {
+							  String uid=controlp.chatp.table.getValueAt(i, 0).toString();
+							  if(mid.equals(uid))
+							  {
+								  controlp.chatp.model.removeRow(i);
+								  break;
+							  }
+						  }
+					  }
+					  break;
 				}
 			}
-		}catch(Exception ex) {}	
+		}catch(Exception ex) {}
+		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getSource()==controlp.chatp.table)
 		{
+			
 			selectRow = controlp.chatp.table.getSelectedRow();
 			String id = controlp.chatp.table.getValueAt(selectRow, 0).toString();
 			
@@ -341,6 +390,7 @@ public class Layout extends JFrame implements ActionListener, Runnable, MouseLis
 				controlp.chatp.b1.setEnabled(true);
 				controlp.chatp.b2.setEnabled(true);
 			}
+			
 		}
 	}
 

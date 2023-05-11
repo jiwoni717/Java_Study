@@ -6,16 +6,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
+
 
 public class DataCollectionManager {
 	public static void main(String[] args) {
 		
 		List<MelonMusicVO> list=new ArrayList<MelonMusicVO>();
 		FileOutputStream fo=null;
-		 ObjectOutputStream oos=null;
+		ObjectOutputStream oos=null;
 		try {
 			fo=new FileOutputStream("C:\\java_datas\\Melon_MusicData.txt");
 			oos=new ObjectOutputStream(fo);
@@ -52,13 +55,10 @@ public class DataCollectionManager {
 			{
 				state="하락";
 				id=etc.get(i).text().replaceAll("[가-힣]", "").trim();
+			} else {
+				state ="NEW";
+				id="0";
 			}
-			else if(etc.get(i).text().contains("new"))
-			{
-				state = "new";
-				id = "0";
-			}
-			
 			vo.setState(state);
 			vo.setIdcrement(Integer.parseInt(id));
 			list.add(vo);

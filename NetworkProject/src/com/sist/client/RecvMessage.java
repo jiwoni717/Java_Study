@@ -11,13 +11,14 @@ public class RecvMessage extends JFrame {
 	
 	public RecvMessage()
 	{
-		la = new JLabel("받는 사람 : ");
+		la = new JLabel("보낸 사람 : ");
 		tf = new JTextField(10);
 		ta = new JTextArea();
 		JScrollPane js = new JScrollPane(ta);
 		b1 = new JButton("답장");
 		b2 = new JButton("취소");
 		tf.setEnabled(false); // 값을 받아올거기때문에!!
+		ta.setEditable(false);
 		
 		JPanel p1 = new JPanel();
 		p1.add(la); p1.add(tf);
