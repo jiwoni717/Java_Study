@@ -185,6 +185,7 @@ public class Server implements Runnable{
 			{
 				//요청값을 받는다 
 				String msg=in.readLine();
+				System.out.println("Client 전송값 : "+msg);
 				// 100|id|name|sex 
 				StringTokenizer st=
 						new StringTokenizer(msg,"|");
