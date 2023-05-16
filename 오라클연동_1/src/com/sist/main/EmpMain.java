@@ -55,7 +55,6 @@ public class EmpMain {
 			}
 			else if(menu==3)
 			{
-				List<EmpVO> list = new ArrayList<EmpVO>();
 //				String s = "";
 //				for(String ss:list)
 //				{
@@ -65,9 +64,9 @@ public class EmpMain {
 //				System.out.println(s);
 				System.out.print("검색할 이름 입력 : ");
 				String ename = scan.next().toUpperCase();
-				EmpVO vo = (EmpVO) dao.empSearchData(ename);
+				List<EmpVO> list = dao.empSearchData(ename);
 				
-				for(EmpVO v:list)
+				for(EmpVO vo:list)
 				{
 					System.out.println(vo.getEname()+"님의 정보 입니다");
 					System.out.println("사번 : "+vo.getEmpno());
